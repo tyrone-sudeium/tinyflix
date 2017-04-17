@@ -25,6 +25,10 @@ namespace Tinyflix
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public bool CompactAvailable { get; private set; }
+
+        private bool _isCompact = false;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -35,6 +39,27 @@ namespace Tinyflix
             titleBar.ButtonInactiveForegroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            CompactAvailable = ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay);
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var mode = _isCompact ? ApplicationViewMode.Default : ApplicationViewMode.CompactOverlay;
+            var viewOptions = _isCompact
+                ? ViewModePreferences.CreateDefault(ApplicationViewMode.Default)
+                : ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+
+            if(!_isCompact)
+            {
+                viewOptions.CustomSize = new Windows.Foundation.Size(640, 360); // Quarter 720p
+            }
+
+            var modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(mode, viewOptions);
+            if(modeSwitched)
+            {
+                _isCompact = !_isCompact;
+            }
         }
     }
 }
