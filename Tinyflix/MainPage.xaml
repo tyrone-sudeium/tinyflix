@@ -5,6 +5,31 @@
     xmlns:local="using:Tinyflix"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="using:Tinyflix.Common"
     mc:Ignorable="d">
-    <WebView x:Name="webView" Source="https://www.netflix.com"/>
+
+    <Page.Resources>
+        <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <WebView x:Name="webView" Source="https://www.netflix.com"
+                 Grid.Row="0" Grid.RowSpan="2"/>
+        <Button Click="Button_Click"
+                RequestedTheme="Dark"
+                Visibility="{Binding CompactAvailable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Grid.Row="1" Grid.Column="0">
+            <SymbolIcon x:Name="CompactOverlaySymbol" Symbol="NewWindow"/>
+        </Button>
+
+    </Grid>
+    
 </Page>
